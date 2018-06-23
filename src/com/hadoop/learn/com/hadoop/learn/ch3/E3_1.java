@@ -1,4 +1,4 @@
-package com.hadoop.learn;
+package com.hadoop.learn.com.hadoop.learn.ch3;
 
 
 import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
