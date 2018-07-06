@@ -4,7 +4,10 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mrunit.MapDriver;
+import org.apache.hadoop.mrunit.ReduceDriver;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 /**
  * @author Ly on 2018/7/6.
@@ -36,6 +39,15 @@ public class E6_5 {
         new MapDriver<LongWritable, Text, Text, IntWritable>()
                 .withMapper(new E6_8MaxTemperatureMapper())
                 .withInput(new LongWritable(0), value)
+                .runTest();
+    }
+
+    @Test
+    public void returnsMaximumIntegerInValues() throws Exception {
+        new ReduceDriver<Text, IntWritable, Text, IntWritable>()
+                .withReducer(new E6_9MaxTemperatureReducer())
+                .withInput(new Text("1950"), Arrays.asList(new IntWritable(10), new IntWritable(5)))
+                .withOutput(new Text("1950"), new IntWritable(10))
                 .runTest();
     }
 }
