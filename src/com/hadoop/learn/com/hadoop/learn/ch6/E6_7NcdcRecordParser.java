@@ -12,19 +12,24 @@ public class E6_7NcdcRecordParser {
     private String year;
     private int airTemperature;
     private String quality;
+    private boolean isMalformed;
 
     public void parse(String record) {
         year = record.substring(15, 19);
-        String airTemperatureString;
+        String airTemperatureString = String.valueOf(Integer.MIN_VALUE);
 
         if (record.charAt(87) == '+') {
             airTemperatureString = record.substring(88, 92);
-        } else {
+        } else if (record.charAt(87) == '-') {
             airTemperatureString = record.substring(87, 92);
+        } else {
+            isMalformed = true;
         }
 
-        airTemperature = Integer.parseInt(airTemperatureString);
-        quality = record.substring(92, 93);
+        if (!isMalformed) {
+            airTemperature = Integer.parseInt(airTemperatureString);
+            quality = record.substring(92, 93);
+        }
     }
 
     public void parse(Text text) {
@@ -41,5 +46,9 @@ public class E6_7NcdcRecordParser {
 
     public int getAirTemperature() {
         return airTemperature;
+    }
+
+    public boolean isMalformed() {
+        return isMalformed;
     }
 }

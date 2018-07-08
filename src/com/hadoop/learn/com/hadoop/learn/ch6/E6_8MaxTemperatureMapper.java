@@ -15,7 +15,8 @@ public class E6_8MaxTemperatureMapper extends Mapper<LongWritable, Text, Text, I
     private E6_7NcdcRecordParser parser = new E6_7NcdcRecordParser();
 
     enum Temperature {
-        OVER_100
+        OVER_100,
+        MALFORMED
     }
 
     @Override
@@ -27,8 +28,11 @@ public class E6_8MaxTemperatureMapper extends Mapper<LongWritable, Text, Text, I
                 System.err.println("Temperature over 100 degrees for input " + value);
                 context.setStatus("Detected possibly corrupt record: see logs.");
                 context.getCounter(Temperature.OVER_100).increment(1);
+                context.write(new Text(parser.getYear()), new IntWritable(parser.getAirTemperature()));
+            } else if (parser.isMalformed()) {
+                System.err.println("Ignoring possible corrupt for input " + value);
+                context.getCounter(Temperature.MALFORMED).increment(1);
             }
-            context.write(new Text(parser.getYear()), new IntWritable(parser.getAirTemperature()));
         }
     }
 }
