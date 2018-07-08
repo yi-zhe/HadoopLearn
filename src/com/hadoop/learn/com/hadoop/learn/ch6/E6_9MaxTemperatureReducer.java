@@ -2,34 +2,20 @@ package com.hadoop.learn.com.hadoop.learn.ch6;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.mapred.OutputCollector;
-import org.apache.hadoop.mapred.Reducer;
-import org.apache.hadoop.mapred.Reporter;
+import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * @author Ly on 2018/7/6.
  */
-public class E6_9MaxTemperatureReducer implements Reducer<Text, IntWritable, Text, IntWritable> {
+public class E6_9MaxTemperatureReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
     @Override
-    public void reduce(Text text, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> outputCollector, Reporter reporter) throws IOException {
+    protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
         int maxValue = Integer.MIN_VALUE;
-        while (values.hasNext()) {
-            maxValue = Math.max(maxValue, values.next().get());
+        for (IntWritable value : values) {
+            maxValue = Math.max(maxValue, value.get());
         }
-        outputCollector.collect(text, new IntWritable(maxValue));
-    }
-
-    @Override
-    public void close() throws IOException {
-
-    }
-
-    @Override
-    public void configure(JobConf jobConf) {
-
+        context.write(key, new IntWritable(maxValue));
     }
 }

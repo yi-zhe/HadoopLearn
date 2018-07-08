@@ -14,7 +14,7 @@ public class E6_7NcdcRecordParser {
     private String quality;
 
     public void parse(String record) {
-        String year = record.substring(15, 19);
+        year = record.substring(15, 19);
         String airTemperatureString;
 
         if (record.charAt(87) == '+') {
