@@ -51,4 +51,12 @@ public class E6_7NcdcRecordParser {
     public boolean isMalformed() {
         return isMalformed;
     }
+
+    public boolean isMissingTemperature() {
+        return airTemperature == MISSING_TEMPERATURE;
+    }
+
+    public String getQuality() {
+        return quality;
+    }
 }
